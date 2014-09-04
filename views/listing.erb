@@ -1,0 +1,25 @@
+<html>
+<head>
+  <title>Index of <%= pwd %></title>
+  <style type="text/css">
+    <%= File.read('views/style.css') %>
+  </style>
+</head>
+<body>
+  <h1>Index of <%= pwd %></h1>
+  <% if !dirs.empty? %>
+    <ul>
+      <% for dir in dirs %>
+        <li><a href="<%= dir %>"><%= dir %>/</a></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if !files.empty? %>
+    <ul>
+      <% for file in files %>
+        <li><a href="<%= file %>"><%= file %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+</body>
+</html>

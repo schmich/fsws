@@ -1,0 +1,25 @@
+body {
+  font: 20px Consolas, Monaco, monospace;
+}
+a {
+  text-decoration: none;
+  color: #555;
+  padding: 15px;
+}
+a:hover {
+  background: #e7e7f3;
+  color: #048;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+li {
+  background: #f3f3f3;
+  margin: 5px;
+  padding: 0;
+}
+li a {
+  display: block;
+}
