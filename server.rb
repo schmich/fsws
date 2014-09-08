@@ -24,6 +24,10 @@ def allowed?(path)
   return target.start_with?(File.absolute_path(Dir.pwd))
 end
 
+def read(file)
+  File.read(File.join(File.dirname(__FILE__), file))
+end
+
 not_found do
   erb :'404'
 end
