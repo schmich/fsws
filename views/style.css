@@ -10,6 +10,12 @@ a:hover {
   background: #e7e7f3;
   color: #048;
 }
+h1 {
+  margin-bottom: 10px;
+}
+body {
+  margin: 10px;
+}
 ul {
   list-style-type: none;
   margin: 0;
@@ -17,7 +23,7 @@ ul {
 }
 li {
   background: #f3f3f3;
-  margin: 5px;
+  margin-bottom: 5px;
   padding: 0;
 }
 li a {

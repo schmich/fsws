@@ -29,7 +29,7 @@ def read(file)
 end
 
 not_found do
-  erb :'404'
+  erb :'404', locals: { path: request.env['REQUEST_PATH'] }
 end
 
 get '*' do
