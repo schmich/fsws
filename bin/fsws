@@ -2,7 +2,6 @@
 
 require 'fsws'
 require 'thin'
-require 'colorize'
 
 port = (ARGV[0] || 8000).to_i
 interface = '0.0.0.0'
@@ -10,17 +9,25 @@ interface = '0.0.0.0'
 Thin::Logging.silent = true
 server = Thin::Server.new(interface, port, Fsws::server, signals: false)
 
-Signal.trap('QUIT') do
-  puts 'Stopping...'
-  server.stop
+if Signal.list.key? 'QUIT'
+  Signal.trap('QUIT') do
+    puts 'Stopping...'
+    server.stop
+  end
 end
 
-Signal.trap('INT') do
-  puts 'Stopping...'
-  server.stop!
+if Signal.list.key? 'INT'
+  Signal.trap('INT') do
+    puts 'Stopping...'
+    server.stop!
+  end
 end
 
-puts '>>'.cyan + " Serving #{Dir.pwd}"
-puts '>>'.cyan + " Listening on #{interface}:#{port}"
-puts '>>'.cyan + " Ctrl+C to stop"
+def normalize(path)
+  path.gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR)
+end
+
+puts ">> Serving #{normalize(Dir.pwd)}"
+puts ">> Listening on #{interface}:#{port}"
+puts ">> Ctrl+C to stop"
 server.start
