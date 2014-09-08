@@ -1,5 +1,4 @@
 require 'rack'
-require 'thin'
 require 'erb'
 require 'pathname'
 require 'ostruct'
@@ -67,7 +66,7 @@ def serve_dir(path)
 end
 
 def erb(view, vars)
-  ERB.new(File.read("views/#{view}.erb"))
+  ERB.new(File.read(File.join(File.dirname(__FILE__), "views/#{view}.erb")))
     .result(OpenStruct.new(vars).instance_eval { binding })
 end
 
@@ -88,11 +87,11 @@ def include(file)
   File.read(File.join(File.dirname(__FILE__), file))
 end
 
-app = Proc.new do |env|
-  code, headers, body = serve(env)
-  [code.to_s, headers, [body]]
+module Fsws
+  def self.server
+    Proc.new do |env|
+      code, headers, body = serve(env)
+      [code.to_s, headers, [body]]
+    end
+  end
 end
-
-port = (ARGV[0] || 8000).to_i
-
-Thin::Server.start('0.0.0.0', port, app)

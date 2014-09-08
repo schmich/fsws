@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'fsws'
+require 'thin'
+
+port = (ARGV[0] || 8000).to_i
+Thin::Server.start('0.0.0.0', port, Fsws::server)
