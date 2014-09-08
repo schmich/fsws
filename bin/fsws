@@ -2,6 +2,25 @@
 
 require 'fsws'
 require 'thin'
+require 'colorize'
 
 port = (ARGV[0] || 8000).to_i
-Thin::Server.start('0.0.0.0', port, Fsws::server)
+interface = '0.0.0.0'
+
+Thin::Logging.silent = true
+server = Thin::Server.new(interface, port, Fsws::server, signals: false)
+
+Signal.trap('QUIT') do
+  puts 'Stopping...'
+  server.stop
+end
+
+Signal.trap('INT') do
+  puts 'Stopping...'
+  server.stop!
+end
+
+puts '>>'.cyan + " Serving #{Dir.pwd}"
+puts '>>'.cyan + " Listening on #{interface}:#{port}"
+puts '>>'.cyan + " Ctrl+C to stop"
+server.start
