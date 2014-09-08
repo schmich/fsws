@@ -1,6 +1,9 @@
 require 'sinatra'
 require 'pathname'
 
+set :port, 8000
+set :bind, '0.0.0.0'
+
 mime_types = {}
 File.open(File.expand_path(File.join(File.dirname(__FILE__), 'mime.types')), 'r') do |file|
   file.each_line do |line|
