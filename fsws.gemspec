@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.3'
   s.add_runtime_dependency 'rack', '~> 1.5'
   s.add_runtime_dependency 'thor', '~> 0.19'
+  s.add_runtime_dependency 'launchy', '~> 2.4'
   s.add_development_dependency 'rake', '~> 10.3'
 end

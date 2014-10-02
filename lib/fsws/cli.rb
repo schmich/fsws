@@ -1,12 +1,14 @@
 require 'rack'
 require 'webrick'
 require 'thor'
+require 'launchy'
 
 module Fsws
   class CommandLine < Thor
-    desc '[-h|--host <host>] [-p|--port <port>]', 'Start server.'
-    option :port, :type => :numeric, :aliases => :p
+    desc '[-h|--host <host>] [-p|--port <port>] [-B|--no-browser]', 'Start server.'
+    option :port, type: :numeric, aliases: :p
     option :host, type: :string, aliases: :host
+    option :'no-browser', type: :boolean, aliases: :B
     option :version, type: :boolean, aliases: :v
     def start
       if options[:version]
@@ -14,6 +16,7 @@ module Fsws
         return
       end
 
+      browser = !options[:'no-browser']
       port = options[:port] || 8000
       interface = options[:host] || '127.0.0.1'
 
@@ -43,7 +46,11 @@ module Fsws
         AccessLog: []
       }
 
-      Rack::Handler::WEBrick.run(Fsws::server, opts)
+      Rack::Handler::WEBrick.run(Fsws::server, opts) do
+        if browser
+          Launchy.open("http://localhost:#{port}")
+        end
+      end
     end
 
     desc '-v|--version', 'Print version.'
