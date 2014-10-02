@@ -57,6 +57,7 @@ def serve_dir(path)
 
   dirs, files = Dir.entries(path).partition { |e| File.directory?(File.join(path, e)) }
   dirs.delete('.')
+  dirs.delete('..') if path == './'
   dirs.sort!
   files.sort!
 
