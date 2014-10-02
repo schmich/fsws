@@ -1,8 +1,9 @@
+require 'rake/testtask'
 require 'fileutils'
 
 class GemInfo
   def initialize
-    @gemspec_filename = Dir['*.gemspec'].first
+    @gemspec_filename = Dir['*.gemspec'][0]
   end
    
   def spec
@@ -29,12 +30,12 @@ end
 $gem = GemInfo.new
 
 desc "Start irb #{$gem.name} session"
-task :irb do
-  sh "irb -rubygems -I./lib -r ./lib/#{$gem.name.gsub('-', '/')}.rb"
+task :console do
+  sh "irb -rubygems -I./lib -r ./lib/#{$gem.name}.rb"
 end
 
 desc "Install #{$gem.name} gem"
-task :'gem:install' => :'gem:build' do
+task :install => :build do
   gemfile = "gem/#{$gem.gem_filename}"
   if !gemfile.nil?
     sh "gem install --no-ri --no-rdoc #{gemfile}"
@@ -44,57 +45,49 @@ task :'gem:install' => :'gem:build' do
 end
 
 desc "Uninstall #{$gem.name} gem"
-task :'gem:uninstall' do
+task :uninstall do
   sh "gem uninstall #{$gem.name} -x"
 end
 
 desc "Build #{$gem.name} gem"
-task :'gem:build' do
+task :build do
   FileUtils.mkdir_p('gem')
   sh "gem build #{$gem.gemspec_filename}"
   FileUtils.mv $gem.gem_filename, 'gem'
 end
 
 desc "Release #{$gem.name} v#{$gem.version} and tag in git"
-task :'gem:release' => [:not_root, :'gem:build'] do
+task :release => :build do
   if (`git` rescue nil).nil?
-    abort 'Could not run git command.'
+    puts 'Could not run git command.'
+    exit!
   end
 
   if (`gem` rescue nil).nil?
-    abort 'Could not run gem command.'
+    puts 'Could not run gem command.'
+    exit!
   end
 
-  unless `git branch --no-color`.strip =~ /^\*\s+master$/
-    abort 'You must release from the master branch.'
+  unless (`git branch --no-color`.strip rescue '') =~ /\A*\s+master\z/
+    puts 'You must release from the master branch.'
+    exit!
   end
 
-  unless `git status` =~ /^nothing to commit/m
-    abort 'You cannot release with outstanding changes (see git status).'
+  print "Do you want to release #{$gem.name} v#{$gem.version} and tag it in git (y/n)? "
+  response = $stdin.gets.strip
+  unless response =~ /\Ay/
+    puts 'Aborting.'
+    exit!
   end
 
   version = $gem.version
-  tag = "v#{version}"
-
-  if `git tag`.strip =~ /^#{tag}$/
-    abort "Tag #{tag} already exists, you must bump version in version.rb."
-  end
-
   puts "Releasing version #{version}."
 
   sh "git commit --allow-empty -a -m \"Release #{version}.\""
-  sh "git tag #{tag}"
+  sh "git tag v#{version}"
   sh 'git push origin master'
-  sh "git push origin #{tag}"
+  sh "git push origin v#{version}"
   sh "gem push gem/#{$gem.gem_filename}"
 
   puts 'Fin.'
-end
-
-task :not_root do
-  if !(`whoami` rescue nil).nil?
-    if `whoami`.strip == 'root'
-      abort 'Do not run as root.'
-    end
-  end
 end
