@@ -15,4 +15,4 @@ This starts a web server for files in the current directory.
 
 Copyright &copy; 2014 Chris Schmich
 <br />
-MIT License, See [LICENSE](LICENSE) for details.
+MIT License. See [LICENSE](LICENSE) for details.
