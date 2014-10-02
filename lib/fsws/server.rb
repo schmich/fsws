@@ -61,7 +61,10 @@ def serve_dir(path)
   dirs.sort!
   files.sort!
 
-  pwd = Pathname.new('/' + Pathname.new(File.absolute_path(path)).relative_path_from(Pathname.new(File.absolute_path(Dir.pwd))).to_s).cleanpath
+  target_path = Pathname.new(File.absolute_path(path))
+  current_path = Pathname.new(File.absolute_path(Dir.pwd))
+  pwd = Pathname.new('/' + target_path.relative_path_from(current_path).to_s).cleanpath.to_s
+  pwd += '/' if pwd[-1] != '/'
 
   return 200, { 'Content-Type' => 'text/html' }, erb('listing', dirs: dirs, files: files, pwd: pwd)
 end

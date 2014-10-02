@@ -6,7 +6,15 @@
   </style>
 </head>
 <body>
-  <h1>Index of <%= pwd %></h1>
+  <%
+    parts = pwd.split('/').map { |p| p + '/' }
+    parts = ['/'] if parts.empty?
+    paths = parts.inject([]) { |acc, part| acc << ((acc.last || '') + part) }
+    paths = paths.zip(parts)
+  %>
+  <h1>
+    Index of <% paths.each { |path| %><a href="<%= path.first %>"><%= path.last %></a><% } %>
+  </h1>
   <% if !dirs.empty? %>
     <ul>
       <% for dir in dirs %>
