@@ -17,7 +17,7 @@ module Fsws
       end
 
       browser = !options[:'no-browser']
-      port = options[:port] || 8000
+      port = options[:port] || 9001
       interface = options[:host] || '127.0.0.1'
 
       if Signal.list.key? 'QUIT'
