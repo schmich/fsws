@@ -1,39 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'fsws'
-require 'rack'
-require 'webrick'
+require 'fsws/cli'
 
-port = (ARGV[0] || 8000).to_i
-interface = '0.0.0.0'
-
-if Signal.list.key? 'QUIT'
-  Signal.trap('QUIT') do
-    puts 'Stopping...'
-    Rack::Handler::WEBrick.shutdown
-  end
-end
-
-if Signal.list.key? 'INT'
-  Signal.trap('INT') do
-    puts 'Stopping...'
-    Rack::Handler::WEBrick.shutdown
-  end
-end
-
-def normalize(path)
-  path.gsub(File::SEPARATOR, File::ALT_SEPARATOR || File::SEPARATOR)
-end
-
-puts ">> Serving #{normalize(Dir.pwd)}"
-puts ">> Listening on #{interface}:#{port}"
-puts ">> Ctrl+C to stop"
-
-rd, wr = IO.pipe
-opts = {
-  BindAddress: interface,
-  Port: port,
-  Logger: WEBrick::Log.new(wr),
-  AccessLog: []
-}
-Rack::Handler::WEBrick.run(Fsws::server, opts)
+Fsws::CommandLine.start(ARGV)
