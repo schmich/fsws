@@ -4,12 +4,24 @@ A simple Ruby-based file system web server for serving static files from a direc
 
 ## Usage
 
+Start a web server for files in the current directory:
+
 ```
 $ gem install fsws
 $ fsws
 ```
 
-This starts a web server for files in the current directory.
+Specify a port:
+
+```
+$ fsws -p 777
+```
+
+Allow external connections:
+
+```
+$ fsws -h 0.0.0.0
+```
 
 ## License
 
