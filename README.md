@@ -2,6 +2,10 @@
 
 A simple Ruby-based file system web server for serving static files from a directory.
 
+<div style="text-align:center" align="center">
+  <img src="https://github.com/schmich/fsws/raw/master/assets/demo.gif" />
+</div>
+
 ## Usage
 
 Start a web server for files in the current directory:
