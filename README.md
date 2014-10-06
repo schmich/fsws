@@ -33,6 +33,12 @@ Allow external connections:
 $ fsws -h 0.0.0.0
 ```
 
+Serve files from another directory:
+
+```
+$ fsws -d ../foo
+```
+
 ## License
 
 Copyright &copy; 2014 Chris Schmich
