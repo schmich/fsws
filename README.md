@@ -1,10 +1,14 @@
 # fsws
 
-A simple Ruby-based file system web server for serving static files from a directory. Works on OSX, Windows, and Linux.
+A simple Ruby-based file system web server for serving static files from a directory on OSX, Windows, or Linux.
+
+It is intended for use in development for viewing statically-generated sites such as documentation (YARD), blogs (Jekyll), code coverage reports (SimpleCov), profiling reports, etc.
 
 <div style="text-align:center" align="center">
   <img src="https://github.com/schmich/fsws/raw/master/assets/demo.gif" />
 </div>
+
+Alternatives include `python -m SimpleHTTPServer`, nginx, and Apache.
 
 ## Usage
 
