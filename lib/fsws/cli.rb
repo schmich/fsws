@@ -5,9 +5,13 @@ require 'launchy'
 
 module Fsws
   class CommandLine < Thor
-    desc '[-h|--host <host>] [-p|--port <port>] [-B|--no-browser]', 'Start server.'
+    desc '[-d <directory>] [-h <host>] [-p <port>] [-B]', 'Start server.'
+    long_desc <<-DESC
+      [-d|--dir <directory>] [-h|--host <host>] [-p|--port <port>] [-B|--no-browser]
+    DESC
     option :port, type: :numeric, aliases: :p
-    option :host, type: :string, aliases: :host
+    option :host, type: :string, aliases: :h
+    option :dir, type: :string, aliases: :d
     option :'no-browser', type: :boolean, aliases: :B
     option :version, type: :boolean, aliases: :v
     def start
@@ -16,9 +20,20 @@ module Fsws
         return
       end
 
+      dir = options[:dir]
       browser = !options[:'no-browser']
       port = options[:port] || 9001
       interface = options[:host] || '127.0.0.1'
+
+      if dir
+        path = File.absolute_path(dir)
+        if Dir.exist?(path)
+          Dir.chdir(path)
+        else
+          $stderr.puts "Directory does not exist: #{normalize(path)}."
+          exit 1
+        end
+      end
 
       if Signal.list.key? 'QUIT'
         Signal.trap('QUIT') do
