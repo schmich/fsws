@@ -4,6 +4,10 @@ A simple Ruby-based file system web server for serving static files from a direc
 
 It is intended for use in development for viewing statically-generated sites such as documentation (YARD), blogs (Jekyll), code coverage reports (SimpleCov), profiling reports, etc.
 
+
+[![Gem Version](https://badge.fury.io/rb/fsws.svg)](http://rubygems.org/gems/fsws)
+[![Dependency Status](https://gemnasium.com/schmich/fsws.svg)](https://gemnasium.com/schmich/fsws)
+
 <br>
 <div style="text-align:center" align="center">
   <img src="https://github.com/schmich/fsws/raw/master/assets/demo.gif" />
