@@ -19,8 +19,6 @@ module Fsws
         return version
       end
 
-      puts "options = #{options}"
-
       dir = options[:dir]
       browser = !options[:'no-browser']
       port = options[:port]
