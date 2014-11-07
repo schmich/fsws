@@ -5,25 +5,30 @@ require 'launchy'
 
 module Fsws
   class CommandLine < Thor
-    desc '[-d <directory>] [-h <host>] [-p <port>] [-B]', 'Start server.'
+    desc '[-d <directory>] [-i <interface>] [-p <port>] [-B]', 'Start server.'
     long_desc <<-DESC
-      [-d|--dir <directory>] [-h|--host <host>] [-p|--port <port>] [-B|--no-browser]
+      [-d|--dir <directory>] [-i|--interface <interface>] [-p|--port <port>] [-B|--no-browser]
     DESC
-    option :port, type: :numeric, aliases: :p
-    option :host, type: :string, aliases: :h
+    option :port, type: :numeric, aliases: :p, default: 9001, lazy_default: 9001
+    option :interface, type: :string, aliases: :i, default: '127.0.0.1', lazy_default: '127.0.0.1'
     option :dir, type: :string, aliases: :d
     option :'no-browser', type: :boolean, aliases: :B
     option :version, type: :boolean, aliases: :v
     def start
       if options[:version]
-        version
-        return
+        return version
       end
+
+      puts "options = #{options}"
 
       dir = options[:dir]
       browser = !options[:'no-browser']
-      port = options[:port] || 9001
-      interface = options[:host] || '127.0.0.1'
+      port = options[:port]
+      interface = options[:interface]
+
+      if interface == '*'
+        interface = '0.0.0.0'
+      end
 
       if dir
         path = File.absolute_path(dir)

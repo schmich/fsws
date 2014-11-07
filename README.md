@@ -34,7 +34,7 @@ $ fsws -p 777
 Allow external connections:
 
 ```
-$ fsws -h 0.0.0.0
+$ fsws -i 0.0.0.0
 ```
 
 Serve files from another directory:
