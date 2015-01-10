@@ -34,6 +34,22 @@ def serve(env)
   return serve_file(path) || serve_dir(path) || error(env)
 end
 
+class SendFile
+  def initialize(path)
+    @file = File.open(path, 'rb')
+  end
+
+  def close
+    @file.close
+  end
+
+  def each
+    while (buffer = @file.read(4096)) do
+      yield buffer
+    end
+  end
+end
+
 def serve_file(path)
   return nil if !File.file? path
 
@@ -41,7 +57,7 @@ def serve_file(path)
   ext = ext[1...ext.length]
   mime_type = mime_types[ext] || 'text/plain'
 
-  return 200, { 'Content-Type' => mime_type }, File.open(path, 'rb').read
+  return 200, { 'Content-Type' => mime_type }, SendFile.new(path)
 end
 
 def serve_dir(path)
@@ -66,7 +82,7 @@ def serve_dir(path)
   pwd = Pathname.new('/' + target_path.relative_path_from(current_path).to_s).cleanpath.to_s
   pwd += '/' if pwd[-1] != '/'
 
-  return 200, { 'Content-Type' => 'text/html' }, erb('listing', dirs: dirs, files: files, pwd: pwd)
+  return 200, { 'Content-Type' => 'text/html' }, [erb('listing', dirs: dirs, files: files, pwd: pwd)]
 end
 
 def erb(view, vars)
@@ -75,7 +91,7 @@ def erb(view, vars)
 end
 
 def error(env)
-  return 404, nil, erb('404', path: env['REQUEST_PATH'])
+  return 404, {}, [erb('404', path: env['REQUEST_PATH'])]
 end
 
 def redirect(path)
@@ -95,7 +111,7 @@ module Fsws
   def self.server
     Proc.new do |env|
       code, headers, body = serve(env)
-      [code.to_s, headers, [body]]
+      [code.to_s, headers, body]
     end
   end
 end
